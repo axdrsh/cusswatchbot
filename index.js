@@ -36,7 +36,6 @@ client.on('messageCreate', message => {
         return;
     }
 
-      // Admin-only command: reset all users' profanity counts
       if (content === '!resetAll') {
         profanityCount = {};
         fs.writeFileSync('profanityCount.json', JSON.stringify(profanityCount, null, 2));
@@ -52,28 +51,24 @@ client.on('messageCreate', message => {
         return;
     }
 
-      // Check for the top users command
       if (content.startsWith('!leaderboard')) {
         const topUsers = Object.entries(profanityCount)
-            .sort(([, a], [, b]) => b - a) // Sort by profanity count in descending order
-            .slice(0, 5) // Limit to top 5 users
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 5)
             .map(([id, count], index) => `#${index + 1}: <@${id}> - ${count} times`);
 
         message.channel.send(topUsers.length > 0 ? `Top users with most profanity:\n${topUsers.join('\n')}` : 'No profanity has been recorded yet.');
         return;
     }
 
-    // Check if the message contains profanity
     if (filter.isProfane(content)) {
         const userId = message.author.id;
 
-        // Increment the user's profanity count
         if (!profanityCount[userId]) {
             profanityCount[userId] = 0;
         }
         profanityCount[userId]++;
 
-        // Save the updated counts to a file
         fs.writeFileSync('profanityCount.json', JSON.stringify(profanityCount, null, 2));
     }
 });
