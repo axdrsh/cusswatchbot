@@ -1,5 +1,3 @@
-## CussWatchBot
-
 CussWatchBot is used to track a user's profanity usage in a discord server built using Discord.js.
 
 ## Commands
